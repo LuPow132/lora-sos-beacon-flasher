@@ -1,0 +1,58 @@
+name: Build firmware
+
+# The .bin files under web/public/firmware/ are committed so Vercel needs no
+# toolchain at deploy time. This workflow rebuilds them from source and fails if
+# the committed binaries do not match, which keeps the checked-in artifacts honest.
+
+on:
+  push:
+    paths:
+      - "LoRa_SOS_Beacon_SX1262/**"
+      - "tools/**"
+      - ".github/workflows/build-firmware.yml"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Cache ESP32 core and libraries
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.arduino15
+            tools/arduino
+          key: arduino-${{ runner.os }}-esp32-3.3.11-${{ hashFiles('tools/setup.mjs') }}
+
+      - name: Install toolchain
+        run: node tools/setup.mjs
+
+      - name: Build beacon firmware
+        run: node tools/build-firmware.mjs
+
+      - name: Build ESP32-S3 probe
+        run: node tools/build-firmware.mjs s3-test
+
+      # buildTime changes every run, so compare the binaries rather than the manifest.
+      - name: Check committed binaries are up to date
+        run: |
+          if ! git diff --quiet -- 'web/public/firmware/**/*.bin'; then
+            echo "::error::Committed firmware binaries differ from a fresh build."
+            echo "Run 'node tools/build-firmware.mjs' locally and commit the result."
+            git diff --stat -- 'web/public/firmware/**/*.bin'
+            exit 1
+          fi
+          echo "Committed binaries match a fresh build."
+
+      - name: Build website
+        working-directory: web
+        run: |
+          npm ci
+          npm run build

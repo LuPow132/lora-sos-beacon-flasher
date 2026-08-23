@@ -1,0 +1,14 @@
+# arduino-cli is fetched by tools/setup.mjs, not committed
+tools/bin/
+tools/out/
+tools/arduino/
+tools/arduino-data/
+tools/arduino-cli.yaml
+
+node_modules/
+dist/
+.vercel/
+.DS_Store
+
+# arduino-cli drops these next to a sketch when compiled without --output-dir
+**/build/

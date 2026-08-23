@@ -1,0 +1,13 @@
+# Normalise text files in the repo, keep native endings in the working tree.
+* text=auto
+
+# Firmware images must be byte-exact. CRLF conversion on any of these would
+# corrupt what gets flashed to a student's board, so mark them binary explicitly
+# rather than relying on git's content auto-detection.
+*.bin binary
+*.pdf binary
+
+# Keep shell-ish tooling LF so it runs unchanged in Linux CI.
+*.mjs text eol=lf
+*.ts  text eol=lf
+*.yml text eol=lf

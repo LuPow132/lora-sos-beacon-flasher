@@ -1,0 +1,19 @@
+{
+  "name": "lora-sos-beacon-flasher",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "esptool-js": "^0.6.0"
+  },
+  "devDependencies": {
+    "@types/w3c-web-serial": "^1.0.8",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  }
+}
