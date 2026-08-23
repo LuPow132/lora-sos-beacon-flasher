@@ -5,7 +5,6 @@
   "framework": "vite",
   "headers": [
     {
-      "//": "source uses path-to-regexp, not RegExp: (.*) is the documented wildcard and the surrounding text is matched literally. Each .bin is requested with a ?v=<sha> query string, so immutable is safe — a rebuilt firmware changes the URL.",
       "source": "/firmware/(.*).bin",
       "headers": [
         { "key": "Content-Type", "value": "application/octet-stream" },
