@@ -87,6 +87,20 @@ Firmware `.bin` files are served `immutable` and requested with a content-hash q
 string, so a classroom of 30 students hits the CDN rather than the origin, and a
 rebuilt firmware still reaches everyone because its URL changes.
 
+Two things about `web/vercel.json` that are easy to get wrong:
+
+- `headers[].source` uses **path-to-regexp, not RegExp**. `(.*)` is the documented
+  wildcard and surrounding text is matched literally, so `/firmware/(.*).bin` is
+  correct and `/firmware/(.*)\.bin` is not.
+- The file is **schema-validated and rejects unknown properties**, including a `"//"`
+  key used as a comment. Keep explanations here instead. Validate changes against
+  <https://openapi.vercel.sh/vercel.json> before pushing.
+
+`manifest.json` deliberately has no cache header rule — it is the only file whose URL
+does not change when the firmware is rebuilt, so it revalidates via
+`fetch(..., { cache: "no-cache" })` in `web/src/manifest.ts` rather than depending on a
+routing rule being correct.
+
 ## Testing without a T-Beam
 
 `tools/test/IdProbe/` is a sketch for any ESP32-S3 board that parses the ID sector with
