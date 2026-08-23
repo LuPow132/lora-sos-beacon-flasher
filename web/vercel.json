@@ -1,19 +1,15 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
   "headers": [
     {
-      "source": "/firmware/(.*)\.bin",
+      "//": "source uses path-to-regexp, not RegExp: (.*) is the documented wildcard and the surrounding text is matched literally. Each .bin is requested with a ?v=<sha> query string, so immutable is safe — a rebuilt firmware changes the URL.",
+      "source": "/firmware/(.*).bin",
       "headers": [
         { "key": "Content-Type", "value": "application/octet-stream" },
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
-    },
-    {
-      "source": "/firmware/(.*)/manifest.json",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=60, must-revalidate" }
       ]
     }
   ]

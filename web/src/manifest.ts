@@ -38,7 +38,10 @@ export function targetName(): string {
 
 export async function loadFirmware(): Promise<LoadedFirmware> {
   const base = `${import.meta.env.BASE_URL}firmware/${targetName()}`;
-  const res = await fetch(`${base}/manifest.json`);
+  // Revalidate the manifest on every load rather than relying on a CDN header rule.
+  // It is the only file whose URL does not change when the firmware is rebuilt, so a
+  // stale copy here would pin students to old binaries.
+  const res = await fetch(`${base}/manifest.json`, { cache: "no-cache" });
   if (!res.ok) throw new Error(`cannot load firmware manifest (HTTP ${res.status})`);
   const manifest: Manifest = await res.json();
 
