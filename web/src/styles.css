@@ -65,16 +65,44 @@ h1 {
 }
 h1 .dot { color: var(--text); }
 
-/* Official partner marks: several are dark navy and would vanish on the black
-   ground, so they sit on a light plate. Never recoloured or filtered. */
+/* Official partner marks on a frosted-glass plate. Several of the logos are dark
+   navy, so the glass has to stay on the light side of translucent — the tint is
+   held around 0.78 alpha, which still resolves to roughly #c8c8c8 over this
+   background and keeps the small print inside the logos legible. The marks
+   themselves are never recoloured or filtered. */
 .partners {
+  position: relative;
   flex: 1 1 320px; min-width: 260px;
-  background: rgba(255, 255, 255, 0.93);
-  border: 1px solid var(--border);
-  border-radius: 10px; padding: 9px 16px;
-  box-shadow: 0 0 22px rgba(41, 233, 127, 0.1);
+  padding: 11px 18px;
+  border-radius: 20px;
+  /* Tinted very slightly toward the theme green. Blurring a near-black backdrop
+     on its own just yields flat grey; the tint is what makes it read as glass
+     sitting on this page rather than a washed-out panel. */
+  background: linear-gradient(135deg, rgba(240, 255, 248, 0.76), rgba(206, 240, 224, 0.58));
+  -webkit-backdrop-filter: blur(26px) saturate(190%);
+  backdrop-filter: blur(26px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.45),
+    0 0 30px rgba(41, 233, 127, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -8px 20px rgba(41, 233, 127, 0.07),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.35);
 }
-.partners img { display: block; width: 100%; height: auto; }
+/* Specular sheen across the top-left, the thing that sells it as glass rather
+   than as flat translucency. Sits under the logos via z-index below. */
+.partners::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(142deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.06) 40%, rgba(255, 255, 255, 0) 62%);
+  pointer-events: none;
+}
+.partners img { position: relative; z-index: 1; display: block; width: 100%; height: auto; }
+/* Without the blur the plate is merely translucent, and the dark navy wordmarks
+   lose their contrast against it. School machines with GPU acceleration off are
+   a realistic case here, so fall back to a near-opaque plate. */
+@supports not (backdrop-filter: blur(1px)) {
+  .partners { background: linear-gradient(135deg, rgba(244, 255, 250, 0.95), rgba(228, 247, 238, 0.92)); }
+}
 
 .subtitle { color: var(--muted); margin: 14px 0 0; font-size: 0.95rem; }
 
