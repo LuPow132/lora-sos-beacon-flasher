@@ -52,16 +52,27 @@ function header(): HTMLElement {
     b.onclick = () => setLang(l);
     return b;
   };
+
+  const partners = el("img", {
+    src: `${import.meta.env.BASE_URL}partners.png`,
+    alt: s.partnersAlt,
+    width: 1200,
+    height: 116,
+    loading: "eager",
+    decoding: "async",
+  });
+
   return el(
     "header",
     {},
+    el("div", { class: "langbar" }, el("div", { class: "langtoggle" }, mk("th", "ไทย"), mk("en", "EN"))),
     el(
       "div",
-      { class: "grow" },
+      { class: "hdr-main" },
       el("h1", {}, s.title, el("span", { class: "dot", textContent: "." })),
-      el("p", { class: "subtitle", textContent: s.subtitle }),
+      el("div", { class: "partners" }, partners),
     ),
-    el("div", { class: "langtoggle" }, mk("th", "ไทย"), mk("en", "EN")),
+    el("p", { class: "subtitle", textContent: s.subtitle }),
   );
 }
 

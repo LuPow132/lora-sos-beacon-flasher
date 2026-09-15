@@ -66,6 +66,7 @@ const TH = {
       "การอัปโหลดผ่านเว็บต้องใช้ Google Chrome, Microsoft Edge หรือ Opera บนคอมพิวเตอร์เท่านั้น " +
       "(Firefox, Safari และมือถือยังไม่รองรับ) กรุณาเปิดหน้านี้ใหม่ด้วย Chrome หรือ Edge",
     firmwareInfo: "เวอร์ชันเฟิร์มแวร์",
+    partnersAlt: "โลโก้หน่วยงานร่วมโครงการ: Thailand Board of Investment, สอวช, BOI STEAM++, STEAM of Things และมหาวิทยาลัยบูรพา",
 };
 
 export type Strings = typeof TH;
@@ -132,6 +133,7 @@ const EN: Strings = {
       "Flashing from the browser requires Google Chrome, Microsoft Edge, or Opera on a desktop computer. " +
       "Firefox, Safari, and mobile browsers do not support it yet. Please reopen this page in Chrome or Edge.",
     firmwareInfo: "Firmware build",
+    partnersAlt: "Partner organisation logos: Thailand Board of Investment, NXPO, BOI STEAM++, STEAM of Things and Burapha University",
 };
 
 const STRINGS: Record<Lang, Strings> = { th: TH, en: EN };
