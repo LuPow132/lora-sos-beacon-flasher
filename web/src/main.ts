@@ -5,6 +5,7 @@ import { loadFirmware, targetName, type LoadedFirmware } from "./manifest";
 import { flash, FlashCancelled, type Phase } from "./flash";
 import { SerialMonitor } from "./monitor";
 import { isSupported } from "./serial";
+import { initAnalytics, trackFlashSuccess } from "./analytics";
 
 const app = document.getElementById("app")!;
 
@@ -257,6 +258,7 @@ function flashTab(): HTMLElement {
       bar.style.width = "100%";
       bar.classList.add("ok");
       pctLabel.textContent = "100%";
+      trackFlashSuccess(targetName(), eraseBox.checked);
       resultBox.append(successBox(beaconId));
     } catch (e) {
       progress.hidden = true;
@@ -444,6 +446,7 @@ function classify(line: string): string {
 
 // ---------------------------------------------------------------- boot
 
+initAnalytics();
 onLangChange(render);
 render();
 firmwarePromise.then(render);

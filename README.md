@@ -101,6 +101,29 @@ does not change when the firmware is rebuilt, so it revalidates via
 `fetch(..., { cache: "no-cache" })` in `web/src/manifest.ts` rather than depending on a
 routing rule being correct.
 
+## Analytics
+
+Visitor and page-view numbers come from Vercel Web Analytics, wired up in
+`web/src/analytics.ts`. This uses the vanilla `inject()` entry point, **not** the
+`<Analytics />` React component in Vercel's onboarding — this app has no React.
+
+**Installing the package is not enough.** Web Analytics must also be switched on for
+the project: Vercel dashboard → the project → **Analytics** → **Enable**. Until then the
+script 404s and the browser console says so explicitly.
+
+Beyond page views, a `firmware_flashed` custom event fires on each successful flash,
+carrying only `target` (`tbeam` or `s3-test`) and `erasedAll`. That distinguishes
+students who actually finished from students who merely opened the page, and keeps
+test-target runs out of the real count.
+
+Privacy: Vercel Web Analytics is cookieless and stores no personal data, so no consent
+banner is required. Keep it that way. In particular the beacon name is **never** sent —
+students type it themselves and can put a real name in it.
+
+Analytics is wrapped so it can never break flashing: it is skipped entirely in
+development, and `track()` failures are swallowed. A student with an ad blocker gets a
+working flasher and an uncounted visit, which is the right trade.
+
 ## Testing without a T-Beam
 
 `tools/test/IdProbe/` is a sketch for any ESP32-S3 board that parses the ID sector with
