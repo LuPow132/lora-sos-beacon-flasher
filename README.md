@@ -111,10 +111,25 @@ Visitor and page-view numbers come from Vercel Web Analytics, wired up in
 the project: Vercel dashboard → the project → **Analytics** → **Enable**. Until then the
 script 404s and the browser console says so explicitly.
 
-Beyond page views, a `firmware_flashed` custom event fires on each successful flash,
-carrying only `target` (`tbeam` or `s3-test`) and `erasedAll`. That distinguishes
-students who actually finished from students who merely opened the page, and keeps
-test-target runs out of the real count.
+### Counting flashes on the Hobby plan
+
+**Custom events are a Pro-only feature.** On Hobby they are accepted by the client and
+then discarded, so the dashboard's Events panel stays empty however many boards get
+flashed. Page views, by contrast, *are* counted on Hobby.
+
+So `trackFlashSuccess()` reports a successful flash twice:
+
+- A **pageview** for the virtual route `/flashed`, which shows up as its own row in the
+  dashboard's **Pages** panel. This is the number that actually answers "how many boards
+  got flashed". Real T-Beam flashes record the path `/flashed`; the ESP32-S3 test target
+  records `/flashed/s3-test`, so development runs stay separable.
+- A **custom event** `firmware_flashed` carrying `target` and `erasedAll`. Discarded on
+  Hobby, but it holds detail the pageview cannot and starts working by itself if the
+  project ever moves to Pro.
+
+The pageview costs one extra page view per flash, so the Page Views total runs slightly
+ahead of genuine page loads. Visitors is unaffected. No real navigation happens — the
+address bar is untouched, so a reload can never land on a path that does not exist.
 
 Privacy: Vercel Web Analytics is cookieless and stores no personal data, so no consent
 banner is required. Keep it that way. In particular the beacon name is **never** sent —
